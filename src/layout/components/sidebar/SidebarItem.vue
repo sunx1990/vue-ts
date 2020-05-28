@@ -3,25 +3,23 @@
         <template v-if="theOnlyOneChild && !theOnlyOneChild.children">
             <SidebarItemLink v-if="theOnlyOneChild.meta" :to="theOnlyOneChild.path">
                 <el-menu-item :index="theOnlyOneChild.path"> 
-                    <span v-if="theOnlyOneChild.meta.title">{{theOnlyOneChild.meta.title}}</span>
+                    <span slot="title" v-if="theOnlyOneChild.meta">{{theOnlyOneChild.meta.title}}</span>
                 </el-menu-item>
-            </SidebarItemLink> 
+            </SidebarItemLink>
         </template>
-        <el-submenu v-else :index="item.path" popper-append-to-body>
+        <el-submenu v-else :index="item.path">
             <template slot="title">
-                <span v-if="item.meta && item.meta.tilte" slot="title">{{item.meta.title}}</span>
+                <span slot="title" v-if="item.meta">{{item.meta.title}}</span>
             </template>
             <template v-if="item.children">
-                <SidebarItem v-if="child in item.children"
+                <SidebarItem v-for="child in item.children"
                              :key="child.path"
                              :item="child"
                              :is-collapse="isCollapse"
                              :is-first-level="false"
-                             :base-path="child.path"
-                             />
+                             :base-path="child.path"/>
             </template>
         </el-submenu>
-
     </div>
 </template>
 
@@ -31,7 +29,7 @@ import {RouteConfig} from 'vue-router';
 import SidebarItemLink from './SidebarItemLink.vue';
 
 @Component({
-    name: 'sideItem',
+    name: 'SidebarItem',
     components: {
         SidebarItemLink,
     },
@@ -39,7 +37,7 @@ import SidebarItemLink from './SidebarItemLink.vue';
 export default class extends Vue {
     @Prop({required: true}) private item!: RouteConfig;
     @Prop({default: false}) private isCollapse!: boolean;
-    @Prop({default: true}) private isFirstLevel!: boolean;
+    // @Prop({default: true}) private isFirstLevel!: boolean;
     @Prop({default: ''}) private basePath!: string;
 
     get showingChildNumber() {
@@ -60,15 +58,18 @@ export default class extends Vue {
             return null;
         }
         if (this.item.children) {
-        for (const child of this.item.children) {
-            if (!child.meta || !child.meta.hidden) {
-            return child;
+            for (const child of this.item.children) {
+                if (!child.meta || !child.meta.hidden) {
+                return child;
+                }
             }
-        }
         }
         // If there is no children, return itself with path removed,
         // because this.basePath already conatins item's path information
-        return { ...this.item, path: '' };
+        return this.item;
+    }
+    private goRoute(name:string){
+        this.$router.push({ name })
     }
 }
 </script>
