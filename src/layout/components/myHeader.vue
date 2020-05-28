@@ -1,9 +1,14 @@
 <template>
   <header class="header">
     <div class="header-title">精友报供宝</div>
-    <div class="header-name">
-      <div class="companyName">{{ companyName }}</div>
-      <div class="name">{{ name }}</div>
+    <div class="header-right">
+      <div>
+        <div class="companyName">{{ companyName }}</div>
+        <div class="name">{{ name }}</div>
+      </div>
+      <div class="logout" v-if="roles.includes('03')">
+        <span @click="logout">退出</span>
+      </div>
     </div>
   </header>
 </template>
@@ -21,6 +26,13 @@ export default class extends Vue {
   get name() {
     return UserModule.name;
   }
+  get roles() {
+    return UserModule.roles;
+  }
+  private logout(){
+    UserModule.LogOut()
+    this.$router.push('/login')
+  }
 }
 </script>
 
@@ -36,10 +48,16 @@ export default class extends Vue {
     font-size: 17px;
     font-weight: 500;
   }
-  .header-name {
+  .header-right {
+    display: flex;
     font-size: 13px;
     .companyName {
       margin-bottom: 5px;
+    }
+    .logout{
+      display: flex;
+      align-items: center;
+      margin-left: 10px;
     }
   }
 }

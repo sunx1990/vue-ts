@@ -42,9 +42,15 @@ class User extends VuexModule implements IUserState {
         // }
         const { data } = await getUserInfo();
         const { comName, userType, insuranceName } = data;
-        this.SET_COM_NAME(data.insuranceName);
-        this.SET_NAME(data.comName);
-        this.SET_ROLES([data.userType]);
+        this.SET_COM_NAME(insuranceName);
+        this.SET_NAME(comName);
+        this.SET_ROLES([userType]);
+    }
+    @Action
+    public async LogOut() {
+        localStorage.removeItem('token')
+        this.SET_TOKEN('');
+        this.SET_ROLES([]);
     }
     
 }

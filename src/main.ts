@@ -15,22 +15,32 @@ router.beforeEach(async (to: Route, from: Route, next: any) => {
   console.log(to.path);
   if (to.path === "/login") {
     next();
-  } else {
-    if (UserModule.roles.length === 0) {
-      try {
-        await UserModule.GetUserInfo();
-        const roles = UserModule.roles;
-        PermissionModule.GenerateRoutes(roles);
-        router.addRoutes(PermissionModule.dynamicRoutes);
-        next({ path: to.fullPath });
-      } catch (error) {
-        console.log(error);
+  } else {  
+    console.log(1)
+    if(sessionStorage.getItem('token')){
+      console.log(2)
+      if (UserModule.roles.length === 0) {
+        console.log(3)
+        try {
+          await UserModule.GetUserInfo();
+          const roles = UserModule.roles;
+          PermissionModule.GenerateRoutes(roles);
+          router.addRoutes(PermissionModule.dynamicRoutes);
+          console.log(to.path)
+          next({ path: to.fullPath });
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        next();
       }
-    } else {
-      next();
+    }else{
+      next({path:'/login'})
     }
+    
   }
 });
+
 new Vue({
   router,
   store,

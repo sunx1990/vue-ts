@@ -6,10 +6,6 @@ Vue.use(VueRouter);
 
 export const constantRoutes: RouteConfig[] = [
   {
-    path: "",
-    redirect: "/login"
-  },
-  {
     path: "/login",
     name: "Login",
     component: () => import(/* webpackChunkName: "login" */ "@/views/login/index.vue")
