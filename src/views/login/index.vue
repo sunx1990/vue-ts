@@ -9,7 +9,7 @@
                     <el-input type="password" v-model="formData.password" placeholder="请输入密码" clearable></el-input>
                 </el-form-item>
                 <div class="footer">
-                    <!-- <el-button type="primary" @click="login">登录</el-button> -->
+                    <el-button type="primary" @click="login">登录</el-button>
                 </div>
             </el-form>
         </div>
@@ -19,6 +19,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import {validateUsername, validatePassword} from '@/utils/validators';
+import {UserModule} from '@/store/modules/user'
 @Component({
     name: 'login',
     components: {},
@@ -33,7 +34,18 @@ export default class extends Vue {
         username: [{require: true, validator: validateUsername}],
         password: [{require: true, validator: validatePassword}],
     };
-    // private login() {}
+    private async login() {
+        try {
+            var params=new FormData()
+            params.append('username',this.formData.username)
+            params.append('password',this.formData.password)
+            await UserModule.Login(params)
+            this.$router.push('/')
+        } catch (error) {
+            console.log(error)
+        }
+        
+    }
 }
 </script>
 

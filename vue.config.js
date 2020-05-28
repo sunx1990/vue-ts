@@ -115,7 +115,15 @@ module.exports = {
   
       hotOnly: false,
   
-      proxy: null,
+      proxy: {
+        '/api': {
+            target: 'http://test.jm8008.com:8081',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/api': ''
+            }
+        }
+      },
       
       disableHostCheck:true,
 
